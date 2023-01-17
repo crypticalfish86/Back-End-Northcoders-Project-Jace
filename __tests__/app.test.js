@@ -60,6 +60,7 @@ describe('APP be-nc-news', () =>
             .then(({body}) => 
             {
                 expect(Array.isArray(body)).toBe(true)
+                expect(body.length !== 0).toBe(true)
                 body.forEach((element) => 
                 {
                     expect(Array.isArray(element)).toBe(false)
@@ -68,9 +69,33 @@ describe('APP be-nc-news', () =>
             })
         })
         test(`will respond with an array of objects each object having the properties, 
-        author, title, article_id, topic, created_at, votes, article_img_url, comment_count`, () =>
+        author, title, article_id, topic, created_at, votes, article_img_url, comment_count
+        and does NOT have the body property`, () =>
         {
-            
+            return request(app).get('/api/articles').expect(200)
+            .then(({body}) =>
+            {
+                body.forEach((element) =>
+                {
+                    expect(element).toHaveProperty('author')
+                    expect(element).toHaveProperty('title')
+                    expect(element).toHaveProperty('article_id')
+                    expect(element).toHaveProperty('topic')
+                    expect(element).toHaveProperty('created_at')
+                    expect(element).toHaveProperty('votes')
+                    expect(element).toHaveProperty('article_img_url')
+                    expect(element).toHaveProperty('comment_count')
+                    expect(element.body).toEqual(undefined)
+                })
+            })
+        })
+        test('has sorted the objects in the array by the created_at property, the first date should have an article id of 7', () =>
+        {
+            return request(app).get('/api/articles').expect(200)
+            .then(({body}) =>
+            {
+                expect(body[0].article_id).toEqual(7)
+            })
         })
     })
 })

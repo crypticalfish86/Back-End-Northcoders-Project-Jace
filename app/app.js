@@ -2,11 +2,16 @@ const express = require('express')
 const {getTopics, getArticles} = require('./controller.js')
 const app = express()
 app.use(express.json())
-app.use((error, request, response, next) =>
+app.use((err, request, response, next) => 
 {
-    if(error)
+    console.log(err)
+    response.status(err.status).send(err.msg)
+})
+app.use((err, request, response, next) =>
+{
+    if(err)
     {
-        response.status(500).send({error})
+        response.status(500).send({err})
     }
 })
 
@@ -14,6 +19,5 @@ app.get('/api/topics', getTopics);
 
 app.get('/api/articles', getArticles);
 
-app.listen(9550, () => {console.log('listening on port 9550')})
 
 module.exports = app;

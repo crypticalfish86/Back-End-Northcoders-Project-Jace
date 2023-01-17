@@ -9,12 +9,17 @@ const getTopics = (request, response) =>
     })
 }
 
-const getArticles = (request, response) =>
+const getArticles = (request, response, next) =>
 {
-    fetchArticles().then(() =>
+    fetchArticles().then((rows) =>
     {
-        response.status(200).send()
+        response.status(200).send(rows)
     })
+    .catch((err) =>
+    {
+        next(err)
+    }
+    )
 }
 
 module.exports = { getTopics, getArticles }
