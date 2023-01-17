@@ -1,5 +1,5 @@
 const express = require('express')
-const {getTopics} = require('./controller.js')
+const {getTopics, getArticles} = require('./controller.js')
 const app = express()
 app.use(express.json())
 app.use((error, request, response, next) =>
@@ -11,6 +11,8 @@ app.use((error, request, response, next) =>
 })
 
 app.get('/api/topics', getTopics);
+
+app.get('/api/articles', getArticles);
 
 app.listen(9550, () => {console.log('listening on port 9550')})
 
