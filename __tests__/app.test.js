@@ -50,4 +50,74 @@ describe('APP be-nc-news', () =>
             })
         })
     })
+    describe('GET /api/articles/:article_id', () =>
+    {
+        test('GET: will return with a status of 200', () =>
+        {
+            return request(app).get('/api/articles/1').expect(200)
+        })
+        test('responds with an object that isn\'t empty', () =>
+        {
+            return request(app).get('/api/articles/1').expect(200)
+            .then(({ body }) =>
+            {
+                expect(Array.isArray(body)).toBe(false)
+                expect(typeof body).toBe('object')
+                expect(Object.keys(body).length !== 0).toBe(true)
+            })
+        })
+        test(`response is an object with the object keys: author, title
+        article_id, body, topic, created_at, votes, article_img_url`, () =>
+        {
+            return request(app).get('/api/articles/1').expect(200)
+            .then(({ body }) =>
+            {
+                expect(body).toHaveProperty('author')
+                expect(body).toHaveProperty('title')
+                expect(body).toHaveProperty('article_id')
+                expect(body).toHaveProperty('body')
+                expect(body).toHaveProperty('topic')
+                expect(body).toHaveProperty('created_at')
+                expect(body).toHaveProperty('votes')
+                expect(body).toHaveProperty('article_img_url')
+
+            })
+        })
+        test(`response is an object with the object keys: author, title
+        article_id, body, topic, created_at, votes, article_img_url
+        where the relevent article_id is present`, () =>
+        {
+            return request(app).get('/api/articles/1').expect(200)
+            .then(({ body }) =>
+            {
+                expect(body).toHaveProperty('author')
+                expect(body).toHaveProperty('title')
+                expect(body).toHaveProperty('article_id')
+                expect(body).toHaveProperty('body')
+                expect(body).toHaveProperty('topic')
+                expect(body).toHaveProperty('created_at')
+                expect(body).toHaveProperty('votes')
+                expect(body.article_id).toEqual(1)
+
+            })
+        })
+        test('responds with error 400 if anything except a number is request as a parameter', () =>
+        {
+            return request(app).get('/api/articles/test').expect(400)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid article ID: not a number')
+            })
+        })
+        test('responds with error 400 if URL specifies an ID that does not exist', () =>
+        {
+            return request(app).get('/api/articles/132958323').expect(400)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid article ID: ID not found')
+            })
+        })
+    })
 })
+/*if you are using send() in anyway you are sending a body which will then
+have an error message*/
