@@ -12,6 +12,5 @@ app.use((error, request, response, next) =>
 
 app.get('/api/topics', getTopics);
 
-app.listen(9550, () => {console.log('listening on port 9550')})
 
 module.exports = app;
