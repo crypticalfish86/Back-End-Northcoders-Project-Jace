@@ -11,4 +11,19 @@ fetchTopics = () =>
     })
 }
 
-module.exports = {fetchTopics}
+const fetchComments = (params) =>
+{
+    return db.query
+    (
+        `
+        SELECT *
+        FROM comments
+        WHERE article_id = ${params};
+        `
+    )
+    .then((response) =>
+    {
+        return response.rows
+    })
+}
+module.exports = {fetchTopics, fetchComments}

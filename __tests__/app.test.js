@@ -50,4 +50,41 @@ describe('APP be-nc-news', () =>
             })
         })
     })
+    describe('GET: /api/articles/:article_id/comments', () =>
+    {
+        test('GET status 200', () =>
+        {
+            return request(app).get('/api/articles/1/comments').expect(200)
+        })
+        test('Responds with an array of objects', () =>
+        {
+            return request(app).get('/api/articles/1/comments').expect(200)
+            .then(({ body }) =>
+            {
+                expect(Array.isArray(body)).toBe(true)
+                body.forEach((element) =>
+                {
+                    expect(typeof element).toBe('object')
+                    expect(Array.isArray(element)).toBe(false)> jest
+                })
+            })
+        })
+        test(`Responds with an array of objects that have the following properties: 
+        comment_id, votes, created_at, author, body, article_id`, () =>
+        {
+            return request(app).get('/api/articles/1/comments').expect(200)
+            .then(({ body }) =>
+            {
+                body.forEach((element) =>
+                {
+                    expect(element).toHaveProperty('comment_id')
+                    expect(element).toHaveProperty('votes')
+                    expect(element).toHaveProperty('created_at')
+                    expect(element).toHaveProperty('author')
+                    expect(element).toHaveProperty('body')
+                    expect(element).toHaveProperty('article_id')
+                })
+            })
+        })
+    })
 })
