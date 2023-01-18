@@ -50,7 +50,9 @@ describe('APP be-nc-news', () =>
             })
         })
     })
-    describe('GET: /api/articles/:article_id/comments', () =>
+})
+
+describe('GET: /api/articles/:article_id/comments', () =>
     {
         test('GET status 200', () =>
         {
@@ -87,4 +89,3 @@ describe('APP be-nc-news', () =>
             })
         })
     })
-})
