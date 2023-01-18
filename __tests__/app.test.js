@@ -28,6 +28,7 @@ describe('APP be-nc-news', () =>
             {
                 const { body } = response
                 expect(Array.isArray(body)).toBe(true)
+                expect(body.length !== 0).toBe(true)
                 body.forEach((element) =>
                 {
                     expect(typeof element).toBe('object')
