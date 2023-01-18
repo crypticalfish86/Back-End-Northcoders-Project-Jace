@@ -52,10 +52,6 @@ describe('APP be-nc-news', () =>
     })
     describe('GET /api/articles/:article_id', () =>
     {
-        test('GET: will return with a status of 200', () =>
-        {
-            return request(app).get('/api/articles/1').expect(200)
-        })
         test('responds with an object that isn\'t empty', () =>
         {
             return request(app).get('/api/articles/1').expect(200)
@@ -119,5 +115,4 @@ describe('APP be-nc-news', () =>
         })
     })
 })
-/*if you are using send() in anyway you are sending a body which will then
-have an error message*/
+
