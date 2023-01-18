@@ -13,86 +13,147 @@ afterAll(() =>
     db.end()
 })
 
-describe('APP be-nc-news', () =>
+describe('GET /api/topics', () => 
 {
-    describe('GET /api/topics', () => 
+    test('GET: will return status 200', () => 
     {
-        test('GET: will return status 200', () => 
+        return request(app).get('/api/topics').expect(200)
+    })
+    test('responds with an array of objects', () => 
+    {
+        return request(app).get('/api/topics').expect(200)
+        .then((response) => 
         {
-            return request(app).get('/api/topics').expect(200)
-        })
-        test('responds with an array of objects', () => 
-        {
-            return request(app).get('/api/topics').expect(200)
-            .then((response) => 
+            const { body } = response
+            expect(Array.isArray(body)).toBe(true)
+            expect(body.length !== 0).toBe(true)
+            body.forEach((element) =>
             {
-                const { body } = response
-                expect(Array.isArray(body)).toBe(true)
-                expect(body.length !== 0).toBe(true)
-                body.forEach((element) =>
-                {
-                    expect(typeof element).toBe('object')
-                    expect(Array.isArray(element)).toBe(false)
-                })
-            })
-        })
-        test('response with an array of objects which each have a slug and description property', () => 
-        {
-            return request(app).get('/api/topics').expect(200)
-            .then(({ body }) =>
-            {
-                body.forEach((element) =>
-                {
-                    expect(element).toHaveProperty('slug')
-                    expect(element).toHaveProperty('description')
-                })
+                expect(typeof element).toBe('object')
+                expect(Array.isArray(element)).toBe(false)
             })
         })
     })
-    describe('GET /api/articles', () =>
+    test('response with an array of objects which each have a slug and description property', () => 
     {
-        test('GET Will respond with an array of objects', () =>
+        return request(app).get('/api/topics').expect(200)
+        .then(({ body }) =>
         {
-            return request(app).get('/api/articles').expect(200)
-            .then(({body}) => 
+            body.forEach((element) =>
             {
-                expect(Array.isArray(body)).toBe(true)
-                expect(body.length !== 0).toBe(true)
-                body.forEach((element) => 
-                {
-                    expect(Array.isArray(element)).toBe(false)
-                    expect(typeof element).toBe('object')
-                })
+                expect(element).toHaveProperty('slug')
+                expect(element).toHaveProperty('description')
             })
         })
-        test(`GET will respond with an array of objects each object having the properties, 
-        author, title, article_id, topic, created_at, votes, article_img_url, comment_count
-        and does NOT have the body property`, () =>
+    })
+    
+})
+
+describe('GET /api/articles/:article_id', () =>
+{
+    test('responds with an object that isn\'t empty', () =>
+    {
+        return request(app).get('/api/articles/1').expect(200)
+        .then(({ body }) =>
         {
-            return request(app).get('/api/articles').expect(200)
-            .then(({body}) =>
+            expect(Array.isArray(body)).toBe(false)
+            expect(typeof body).toBe('object')
+            expect(Object.keys(body).length !== 0).toBe(true)
+        })
+    })
+    test(`response is an object with the object keys: author, title
+    article_id, body, topic, created_at, votes, article_img_url`, () =>
+    {
+        return request(app).get('/api/articles/1').expect(200)
+        .then(({ body }) =>
+        {
+            expect(body).toHaveProperty('author')
+            expect(body).toHaveProperty('title')
+            expect(body).toHaveProperty('article_id')
+            expect(body).toHaveProperty('body')
+            expect(body).toHaveProperty('topic')
+            expect(body).toHaveProperty('created_at')
+            expect(body).toHaveProperty('votes')
+            expect(body).toHaveProperty('article_img_url')
+        })
+    })
+    test(`response is an object with the object keys: author, title
+    article_id, body, topic, created_at, votes, article_img_url
+    where the relevent article_id is present`, () =>
+    {
+        return request(app).get('/api/articles/1').expect(200)
+        .then(({ body }) =>
+        {
+            expect(body).toHaveProperty('author')
+            expect(body).toHaveProperty('title')
+            expect(body).toHaveProperty('article_id')
+            expect(body).toHaveProperty('body')
+            expect(body).toHaveProperty('topic')
+            expect(body).toHaveProperty('created_at')
+            expect(body).toHaveProperty('votes')
+            expect(body.article_id).toEqual(1)
+        })
+    })
+    test('responds with error 400 if anything except a number is request as a parameter', () =>
+    {
+        return request(app).get('/api/articles/test').expect(400)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid article ID: not a number')
+        })
+    })
+    test('responds with error 404 if URL specifies an ID that does not exist', () =>
+    {
+        return request(app).get('/api/articles/132958323').expect(404)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid article ID: ID not found')
+        })
+    })
+})
+describe('GET /api/articles', () =>
+{
+    test('GET Will respond with an array of objects', () =>
+    {
+        return request(app).get('/api/articles').expect(200)
+        .then(({body}) => 
+        {
+            expect(Array.isArray(body)).toBe(true)
+            expect(body.length !== 0).toBe(true)
+            body.forEach((element) => 
             {
-                body.forEach((element) =>
-                {
-                    expect(element).toHaveProperty('author')
-                    expect(element).toHaveProperty('title')
-                    expect(element).toHaveProperty('article_id')
-                    expect(element).toHaveProperty('topic')
-                    expect(element).toHaveProperty('created_at')
-                    expect(element).toHaveProperty('votes')
-                    expect(element).toHaveProperty('article_img_url')
-                    expect(element).toHaveProperty('comment_count')
-                    expect(element.body).toEqual(undefined)
-                })
+                expect(Array.isArray(element)).toBe(false)
+                expect(typeof element).toBe('object')
             })
         })
-        test('has sorted the objects in the array by the created_at property', () =>
+    })
+    test(`GET will respond with an array of objects each object having the properties, 
+    author, title, article_id, topic, created_at, votes, article_img_url, comment_count
+    and does NOT have the body property`, () =>
+    {
+        return request(app).get('/api/articles').expect(200)
+        .then(({body}) =>
         {
-            return request(app).get('/api/articles').expect(200)
-            .then(({body}) =>
+            body.forEach((element) =>
             {
-                expect(body).toBeSortedBy('created_at', {ascending: true})
+                expect(element).toHaveProperty('author')
+                expect(element).toHaveProperty('title')
+                expect(element).toHaveProperty('article_id')
+                expect(element).toHaveProperty('topic')
+                expect(element).toHaveProperty('created_at')
+                expect(element).toHaveProperty('votes')
+                expect(element).toHaveProperty('article_img_url')
+                expect(element).toHaveProperty('comment_count')
+                expect(element.body).toEqual(undefined)
             })
+        })
+    })
+    test('has sorted the objects in the array by the created_at property', () =>
+    {
+        return request(app).get('/api/articles').expect(200)
+        .then(({body}) =>
+        {
+            expect(body).toBeSortedBy('created_at', {ascending: true})
         })
     })
 })
