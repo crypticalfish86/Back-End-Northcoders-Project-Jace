@@ -50,11 +50,7 @@ describe('APP be-nc-news', () =>
     })
     describe('GET /api/articles', () =>
     {
-        test('GET: will return a status of 200', () => 
-        {
-            return request(app).get('/api/articles').expect(200)
-        })
-        test('Will respond with an array of objects', () =>
+        test('GET Will respond with an array of objects', () =>
         {
             return request(app).get('/api/articles').expect(200)
             .then(({body}) => 
@@ -68,7 +64,7 @@ describe('APP be-nc-news', () =>
                 })
             })
         })
-        test(`will respond with an array of objects each object having the properties, 
+        test(`GET will respond with an array of objects each object having the properties, 
         author, title, article_id, topic, created_at, votes, article_img_url, comment_count
         and does NOT have the body property`, () =>
         {
@@ -89,12 +85,12 @@ describe('APP be-nc-news', () =>
                 })
             })
         })
-        test('has sorted the objects in the array by the created_at property, the first date should have an article id of 7', () =>
+        test('has sorted the objects in the array by the created_at property', () =>
         {
             return request(app).get('/api/articles').expect(200)
             .then(({body}) =>
             {
-                expect(body[0].article_id).toEqual(7)
+                expect(body).toBeSortedBy('created_at', {ascending: true})
             })
         })
     })

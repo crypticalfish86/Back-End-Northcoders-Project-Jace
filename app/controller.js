@@ -15,11 +15,7 @@ const getArticles = (request, response, next) =>
     {
         response.status(200).send(rows)
     })
-    .catch((err) =>
-    {
-        next(err)
-    }
-    )
+    .catch(next)
 }
 
 module.exports = { getTopics, getArticles }
