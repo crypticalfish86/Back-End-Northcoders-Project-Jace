@@ -21,7 +21,7 @@ const fetchArticles = () =>
         (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id)
         AS comment_count
         FROM articles
-        RIGHT JOIN comments
+        LEFT JOIN comments
         ON articles.article_id = comments.comment_id
         GROUP BY articles.article_id
         ORDER BY articles.created_at ASC
