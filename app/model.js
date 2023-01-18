@@ -13,17 +13,32 @@ fetchTopics = () =>
 
 const fetchComments = (params) =>
 {
-    return db.query
-    (
-        `
-        SELECT *
-        FROM comments
-        WHERE article_id = ${params};
-        `
-    )
-    .then((response) =>
+    if(/[0-9]+/g.test(params))
     {
-        return response.rows
-    })
+        return db.query
+        (
+            `
+            SELECT *
+            FROM comments
+            WHERE article_id = ${params};
+            `
+        )
+        .then((response) =>
+        {
+            if(response.rowCount !== 0)
+            {
+                return response.rows
+            }
+            else
+            {
+                return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
+            }
+        })
+    }
+    else
+    {
+        return Promise.reject({status: 400, msg: 'invalid article ID: not a number'})
+    }
+    
 }
 module.exports = {fetchTopics, fetchComments}

@@ -10,7 +10,7 @@ const getTopics = (request, response) =>
     })
 }
 
-const getComments = (request, response) =>
+const getComments = (request, response, next) =>
 {
     const { params } = request
     fetchComments(params.article_id)
@@ -18,5 +18,6 @@ const getComments = (request, response) =>
     {
         response.status(200).send(rows)
     })
+    .catch(next)
 }
 module.exports = { getTopics, getComments }

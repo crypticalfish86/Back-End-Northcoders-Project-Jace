@@ -54,10 +54,6 @@ describe('APP be-nc-news', () =>
 
 describe('GET: /api/articles/:article_id/comments', () =>
     {
-        test('GET status 200', () =>
-        {
-            return request(app).get('/api/articles/1/comments').expect(200)
-        })
         test('Responds with an array of objects', () =>
         {
             return request(app).get('/api/articles/1/comments').expect(200)
@@ -67,7 +63,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
                 body.forEach((element) =>
                 {
                     expect(typeof element).toBe('object')
-                    expect(Array.isArray(element)).toBe(false)> jest
+                    expect(Array.isArray(element)).toBe(false)
                 })
             })
         })
@@ -86,6 +82,33 @@ describe('GET: /api/articles/:article_id/comments', () =>
                     expect(element).toHaveProperty('body')
                     expect(element).toHaveProperty('article_id')
                 })
+            })
+        })
+        test('responds with the correct comments of the relevant article', () =>
+        {
+            return request(app).get('/api/articles/1/comments').expect(200)
+            .then(({ body }) =>
+            {
+                body.forEach((element) =>
+                {
+                    expect(element.article_id).toEqual(1)
+                })
+            })
+        })
+        test('responds with a status of 400 and a message: invalid article ID: not a number when given an id that isn\'t a number', () =>
+        {
+            return request(app).get('/api/articles/test/comments').expect(400)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid article ID: not a number')
+            })
+        })
+        test('responds with a status of 404 and a message invalid article ID: ID not found, when given a number out of range of our database', () =>
+        {
+            return request(app).get('/api/articles/10298748/comments').expect(404)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid article ID: ID not found')
             })
         })
     })
