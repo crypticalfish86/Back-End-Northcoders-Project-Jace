@@ -1,4 +1,5 @@
-const {fetchTopics, fetchArticleById} = require('./model.js')
+const {fetchTopics, fetchArticles, fetchArticleById} = require('./model.js')
+
 const fs = require('fs/promises')
 
 const getTopics = (request, response) => 
@@ -7,6 +8,15 @@ const getTopics = (request, response) =>
     {
         response.status(200).send(rows)
     })
+}
+
+const getArticles = (request, response, next) =>
+{
+    fetchArticles().then((rows) =>
+    {
+        response.status(200).send(rows)
+    })
+    .catch(next)
 }
 
 const getArticleById = (request, response, next) =>
@@ -20,4 +30,5 @@ const getArticleById = (request, response, next) =>
     .catch(next)
 }
 
-module.exports = { getTopics, getArticleById }
+module.exports = { getTopics, getArticles, getArticleById }
+
