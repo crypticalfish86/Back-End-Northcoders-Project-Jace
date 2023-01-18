@@ -59,7 +59,7 @@ const fetchArticleById = (params) =>
                 }
                 else
                 {
-                    return Promise.reject({status: 400, msg: 'invalid article ID: ID not found'})
+                    return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
                 }
             })
         }
@@ -71,4 +71,4 @@ const fetchArticleById = (params) =>
 }
 
 
-module.exports = {fetchTopics, fetchArticles, fetchArticlesById}
+module.exports = {fetchTopics, fetchArticles, fetchArticleById}
