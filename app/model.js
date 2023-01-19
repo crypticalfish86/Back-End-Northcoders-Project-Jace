@@ -24,15 +24,33 @@ const fetchComments = (params) =>
             WHERE article_id = ${params};
             `
         )
-        .then((response) =>
+        .then((responseComment) =>
         {
-            if(response.rowCount !== 0)
+            if(responseComment.rowCount !== 0)
             {
-                return response.rows
+                return responseComment.rows
             }
             else
             {
-                return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
+                return db.query
+                (
+                    `
+                    SELECT *
+                    FROM articles
+                    WHERE article_id = ${params}
+                    `
+                )
+                .then((responseArticle) =>
+                {
+                    if(responseArticle.rowCount !== 0)
+                    {
+                        return responseComment.rows
+                    }
+                    else
+                    {
+                        return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
+                    }
+                })
             }
         })
     }

@@ -204,6 +204,15 @@ describe('GET: /api/articles/:article_id/comments', () =>
                 })
             })
         })
+        test('if the article has 0 comments then it should respond with an empty array and a status code of 200', () =>
+        {
+            return request(app).get('/api/articles/12/comments').expect(200)
+            .then(({ body }) =>
+            {
+                expect(Array.isArray(body)).toBe(true)
+                expect(body.length).toBe(0)
+            })
+        })
         test('responds with a status of 400 and a message: invalid article ID: not a number when given an id that isn\'t a number', () =>
         {
             return request(app).get('/api/articles/test/comments').expect(400)
