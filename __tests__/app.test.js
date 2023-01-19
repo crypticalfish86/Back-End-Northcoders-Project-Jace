@@ -94,7 +94,7 @@ describe('GET /api/articles/:article_id', () =>
             expect(body.article_id).toEqual(1)
         })
     })
-    test('responds with error 400 if anything except a number is request as a parameter', () =>
+    test('responds with error 400 if anything except a number is requested as a parameter', () =>
     {
         return request(app).get('/api/articles/test').expect(400)
         .then((err) =>
@@ -154,6 +154,155 @@ describe('GET /api/articles', () =>
         .then(({body}) =>
         {
             expect(body).toBeSortedBy('created_at', {ascending: true})
+        })
+    })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+describe('POST /api/articles/:article_id/comments', () =>
+{
+    test('takes an object containing a username and a body in the request body and returns an object', () =>
+    {
+        let userCommentReference = 
+            {
+                username: 'icellusedkars',
+                body: 'Fruit pastilles'
+            }
+        return request(app).post('/api/articles/1/comments').expect(200).send(userCommentReference)
+        .then(({ body }) =>
+        {
+            expect(typeof body).toBe('object')
+            expect(Array.isArray(body)).toBe(false)
+        })
+    })
+    test(`takes an object containing a username and a body in the request body and returns an object that has the properties:
+    body, votes, author, article_id, created_at`, () =>
+    {
+        let userCommentReference = 
+            {
+                username: 'icellusedkars',
+                body: 'Fruit pastilles'
+            }
+        return request(app).post('/api/articles/1/comments').expect(200).send(userCommentReference)
+        .then(({ body }) =>
+        {
+            expect(body).toHaveProperty('body')
+            expect(body).toHaveProperty('votes')
+            expect(body).toHaveProperty('author')
+            expect(body).toHaveProperty('article_id')
+            expect(body).toHaveProperty('created_at')
+        })
+    })
+    test(`takes an object containing a username and a body in the request body and returns an object that 
+    has the same body, same username as author, and the correct article_id`, () =>
+    {
+        let userCommentReference = 
+        {
+            username: 'icellusedkars',
+            body: 'Fruit pastilles'
+        }
+        return request(app).post('/api/articles/1/comments').expect(200).send(userCommentReference)
+        .then(({ body }) =>
+        {
+            expect(body.body).toEqual(userCommentReference.body)
+            expect(body.author).toEqual(userCommentReference.username)
+            expect(body.article_id).toEqual(1)
+        })
+    })
+    test('responds with error 400 if anything except a number is requested as a parameter', () =>
+    {
+        let userCommentReference = 
+        {
+            username: 'icellusedkars',
+            body: 'Fruit pastilles'
+        }
+        return request(app).post('/api/articles/test/comments').expect(400).send(userCommentReference)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid article ID: not a number')
+        })
+    })
+    test('responds with error 404 if URL specifies an ID that does not exist', () =>
+    {
+        let userCommentReference = 
+        {
+            username: 'icellusedkars',
+            body: 'Fruit pastilles'
+        }
+        return request(app).post('/api/articles/102738619863/comments').expect(404).send(userCommentReference)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid article ID: ID not found')
+        })
+    })
+    test('if the username that is not matched anywhere, will return an error 404', () =>
+    {
+        let userCommentReference = 
+        {
+            username: 'THIS_USER_DOES_NOT_EXIST',
+            body: 'Fruit pastilles'
+        }
+        return request(app).post('/api/articles/1/comments').expect(404).send(userCommentReference)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid username: user not found')
+        })
+    })
+    test('if the username is matched but the reference body is not matched anywhere, will return an error 404', () =>
+    {
+        let userCommentReference = 
+        {
+            username: 'icellusedkars',
+            body: 'THIS BODY DOES NOT EXIST I DID NOT MAKE THIS COMMENT'
+        }
+        return request(app).post('/api/articles/1/comments').expect(404).send(userCommentReference)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid body: comment by that user not found')
         })
     })
 })

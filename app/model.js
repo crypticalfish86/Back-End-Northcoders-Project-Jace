@@ -71,4 +71,127 @@ const fetchArticleById = (params) =>
 }
 
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const fetchUserComment = (params, requestBody) =>
+{
+    if(!/[0-9]+/g.test(params))
+    {
+        return Promise.reject({status: 400, msg: 'invalid article ID: not a number'})
+    }
+    return db.query
+    (
+        `
+        SELECT * 
+        FROM comments
+        WHERE article_id = ${params}
+        AND author = \'${requestBody.username}\'
+        AND body = \'${requestBody.body}\'
+        `
+    )
+    .then((response) =>
+    {
+        if(response.rowCount !== 0)
+        {
+            return response.rows[0]
+        }
+        
+        else
+        {
+            return db.query
+            (
+                `
+                SELECT *
+                FROM comments
+                WHERE article_id = ${params}
+                AND author = \'${requestBody.username}\'
+                `
+            )
+            .then((response) =>
+            {
+                if(response.rowCount !== 0)
+                {
+                    return Promise.reject({status: 404, msg: 'invalid body: comment by that user not found'})
+                }
+                else
+                {
+                    return db.query
+                    (
+                        `
+                        SELECT *
+                        FROM comments
+                        Where article_id = ${params}
+                        `
+                    )
+                    .then((response) =>
+                    {
+                        if(response.rowCount !== 0)
+                        {
+                            return Promise.reject({status: 404, msg: 'invalid username: user not found'})
+                        }
+                        else
+                        {
+                            return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
+                        }
+                    })
+                }
+            })
+        }
+    })
+}
+
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchUserComment}
