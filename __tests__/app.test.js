@@ -242,7 +242,7 @@ describe('POST /api/articles/:article_id/comments', () =>
         })
     })
 })
-=======
+
 describe('GET: /api/articles/:article_id/comments', () =>
     {
         test('Responds with an array of objects', () =>
