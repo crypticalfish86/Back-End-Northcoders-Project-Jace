@@ -73,6 +73,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
             return request(app).get('/api/articles/1/comments').expect(200)
             .then(({ body }) =>
             {
+                expect(body.length !== 0).toBe(true)
                 body.forEach((element) =>
                 {
                     expect(element).toHaveProperty('comment_id')
@@ -89,6 +90,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
             return request(app).get('/api/articles/1/comments').expect(200)
             .then(({ body }) =>
             {
+                expect(body.length !== 0).toBe(true)
                 body.forEach((element) =>
                 {
                     expect(element.article_id).toEqual(1)
