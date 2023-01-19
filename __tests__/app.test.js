@@ -158,7 +158,6 @@ describe('GET /api/articles', () =>
     })
 })
 
-})
 
 describe('GET: /api/articles/:article_id/comments', () =>
     {
@@ -222,4 +221,4 @@ describe('GET: /api/articles/:article_id/comments', () =>
             })
         })
     })
-})
+

@@ -36,6 +36,10 @@ const fetchComments = (params) =>
             }
         })
     }
+    else
+    {
+        return Promise.reject({status:400, msg: 'invalid article ID: not a number'})
+    }
 }
 
 const fetchArticles = () =>
