@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const {getTopics, getArticles, getArticleById, getUserComment} = require('./controller.js')
+const {getTopics, getArticles, getArticleById, postUserComment} = require('./controller.js')
 
 
 
@@ -16,7 +16,7 @@ app.get('/api/articles/:article_id', getArticleById)
 
 
 
-app.post('/api/articles/:article_id/comments', getUserComment)
+app.post('/api/articles/:article_id/comments', postUserComment)
 
 app.use((error, request, response, next) =>
 {

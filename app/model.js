@@ -125,9 +125,7 @@ const fetchArticleById = (params) =>
 
 
 
-
-
-const fetchUserComment = (params, requestBody) =>
+const addUserComment = (params, body) =>
 {
     if(!/[0-9]+/g.test(params))
     {
@@ -136,62 +134,41 @@ const fetchUserComment = (params, requestBody) =>
     return db.query
     (
         `
-        SELECT * 
-        FROM comments
+        SELECT *
+        FROM articles
         WHERE article_id = ${params}
-        AND author = \'${requestBody.username}\'
-        AND body = \'${requestBody.body}\'
         `
     )
     .then((response) =>
     {
-        if(response.rowCount !== 0)
+        if(response.rowCount === 0)
         {
-            return response.rows[0]
+            return Promise.reject({status: 404, msg: 'invalid article ID: article not found'})
         }
-        
         else
         {
             return db.query
             (
                 `
-                SELECT *
-                FROM comments
-                WHERE article_id = ${params}
-                AND author = \'${requestBody.username}\'
+                INSERT INTO comments (body, author, article_id)
+                VALUES (\'${body.body}\', \'${body.username}\', ${params})
                 `
             )
-            .then((response) =>
+            .then(() =>
             {
-                if(response.rowCount !== 0)
-                {
-                    return Promise.reject({status: 404, msg: 'invalid body: comment by that user not found'})
-                }
-                else
-                {
-                    return db.query
-                    (
-                        `
-                        SELECT *
-                        FROM comments
-                        Where article_id = ${params}
-                        `
-                    )
-                    .then((response) =>
-                    {
-                        if(response.rowCount !== 0)
-                        {
-                            return Promise.reject({status: 404, msg: 'invalid username: user not found'})
-                        }
-                        else
-                        {
-                            return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
-                        }
-                    })
-                }
+                return db.query
+                (
+                    `
+                    SELECT *
+                    FROM comments
+                    WHERE body = \'${body.body}\'
+                    AND author = \'${body.username}\'
+                    AND article_id = ${params}
+                    `
+                )
             })
         }
     })
 }
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchUserComment}
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, addUserComment}

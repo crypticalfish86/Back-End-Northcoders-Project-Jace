@@ -1,4 +1,4 @@
-const {fetchTopics, fetchArticles, fetchArticleById, fetchUserComment} = require('./model.js')
+const {fetchTopics, fetchArticles, fetchArticleById, addUserComment} = require('./model.js')
 
 const fs = require('fs/promises')
 
@@ -48,15 +48,15 @@ const getArticleById = (request, response, next) =>
 
 
 
-const getUserComment = (request, response, next) =>
+const postUserComment = (request, response, next) =>
 {
     const { params, body } = request
-    fetchUserComment(params.article_id, body)
-    .then((rows) =>
+    addUserComment(params.article_id, body)
+    .then(({rows}) =>
     {
-        response.status(201).send(rows)
+        response.status(201).send(rows[0])
     })
     .catch(next)
 }
-module.exports = { getTopics, getArticles, getArticleById, getUserComment }
+module.exports = { getTopics, getArticles, getArticleById, postUserComment }
 
