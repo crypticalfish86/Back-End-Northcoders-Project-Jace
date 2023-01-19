@@ -11,6 +11,55 @@ const fetchTopics = () =>
     })
 }
 
+
+const fetchComments = (params) =>
+{
+    if(/[0-9]+/g.test(params))
+    {
+        return db.query
+        (
+            `
+            SELECT *
+            FROM comments
+            WHERE article_id = ${params};
+            `
+        )
+        .then((responseComment) =>
+        {
+            if(responseComment.rowCount !== 0)
+            {
+                return responseComment.rows
+            }
+            else
+            {
+                return db.query
+                (
+                    `
+                    SELECT *
+                    FROM articles
+                    WHERE article_id = ${params}
+                    `
+                )
+                .then((responseArticle) =>
+                {
+                    if(responseArticle.rowCount !== 0)
+                    {
+                        return responseComment.rows
+                    }
+                    else
+                    {
+                        return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
+                    }
+                })
+            }
+        })
+    }
+    else
+    {
+        return Promise.reject({status:400, msg: 'invalid article ID: not a number'})
+    }
+}
+
 const fetchArticles = () =>
 {
     return db.query
@@ -71,4 +120,5 @@ const fetchArticleById = (params) =>
 }
 
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById}
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments}
+
