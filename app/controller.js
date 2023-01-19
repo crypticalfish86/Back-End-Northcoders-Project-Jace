@@ -1,10 +1,11 @@
-const {fetchTopics, fetchArticles, fetchArticleById, addUserComment} = require('./model.js')
+const {fetchTopics, fetchArticles, fetchArticleById, fetchComments, addUserComment} = require('./model.js')
 
 const fs = require('fs/promises')
 
 const getTopics = (request, response) => 
 {
-    fetchTopics().then((rows) => 
+    fetchTopics()
+    .then((rows) => 
     {
         response.status(200).send(rows)
     })
@@ -30,23 +31,16 @@ const getArticleById = (request, response, next) =>
     .catch(next)
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const getComments = (request, response, next) =>
+{
+    const { params } = request
+    fetchComments(params.article_id)
+    .then((rows) =>
+    {
+      response.status(200).send(rows)
+    })
+    .catch(next)
+}
 
 const postUserComment = (request, response, next) =>
 {
@@ -58,5 +52,5 @@ const postUserComment = (request, response, next) =>
     })
     .catch(next)
 }
-module.exports = { getTopics, getArticles, getArticleById, postUserComment }
 
+module.exports = { getTopics, getArticles, getArticleById, getComments, postUserComment }
