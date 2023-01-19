@@ -135,19 +135,25 @@ const addUserComment = (params, body) =>
     )
     .then((response) =>
     {
+        
         if(response.rowCount === 0)
         {
             return Promise.reject({status: 404, msg: 'invalid article ID: article not found'})
         }
         else
         {
-            return db.query
+            
+            const SQLStringInsert = format
             (
                 `
                 INSERT INTO comments (body, author, article_id)
-                VALUES (\'${body.body}\', \'${body.username}\', ${params})
+                VALUES %L
+                Returning *;
                 `
+                ,[[body.body, body.username, params]]
             )
+
+            return db.query(SQLStringInsert)
             .then(() =>
             {
                 return db.query
@@ -155,10 +161,12 @@ const addUserComment = (params, body) =>
                     `
                     SELECT *
                     FROM comments
-                    WHERE body = \'${body.body}\'
-                    AND author = \'${body.username}\'
-                    AND article_id = ${params}
+                    WHERE body = $1
+                    AND author = $2
+                    AND article_id = $3
                     `
+                    ,
+                    [body.body, body.username, params]
                 )
             })
         }
@@ -166,3 +174,4 @@ const addUserComment = (params, body) =>
 }
 
 module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments, addUserComment}
+
