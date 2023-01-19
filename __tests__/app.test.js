@@ -175,7 +175,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
             })
         })
         test(`Responds with an array of objects that have the following properties: 
-        comment_id, votes, created_at, author, body, article_id`, () =>
+        comment_id(number), votes(string), created_at(string), author(string), body(string), article_id(number)`, () =>
         {
             return request(app).get('/api/articles/1/comments').expect(200)
             .then(({ body }) =>
@@ -183,12 +183,20 @@ describe('GET: /api/articles/:article_id/comments', () =>
                 expect(body.length !== 0).toBe(true)
                 body.forEach((element) =>
                 {
-                    expect(element).toHaveProperty('comment_id')
-                    expect(element).toHaveProperty('votes')
-                    expect(element).toHaveProperty('created_at')
-                    expect(element).toHaveProperty('author')
-                    expect(element).toHaveProperty('body')
-                    expect(element).toHaveProperty('article_id')
+                    expect(element).toEqual
+                    (
+                        expect.objectContaining
+                        (
+                            {
+                                comment_id: expect.any(Number),
+                                body: expect.any(String),
+                                article_id: expect.any(Number),
+                                author: expect.any(String),
+                                votes: expect.any(Number),
+                                created_at: expect.any(String)
+                            }
+                        )
+                    )
                 })
             })
         })
