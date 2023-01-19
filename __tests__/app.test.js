@@ -207,7 +207,7 @@ describe('POST /api/articles/:article_id/comments', () =>
 {
     test('takes an object containing a username and a body in the request body and returns an object', () =>
     {
-        let userCommentReference = 
+        const userCommentReference = 
             {
                 username: 'icellusedkars',
                 body: 'Fruit pastilles'
@@ -222,7 +222,7 @@ describe('POST /api/articles/:article_id/comments', () =>
     test(`takes an object containing a username and a body in the request body and returns an object that has the properties:
     body, votes, author, article_id, created_at`, () =>
     {
-        let userCommentReference = 
+        const userCommentReference = 
             {
                 username: 'icellusedkars',
                 body: 'Fruit pastilles'
@@ -240,7 +240,7 @@ describe('POST /api/articles/:article_id/comments', () =>
     test(`takes an object containing a username and a body in the request body and returns an object that 
     has the same body, same username as author, and the correct article_id`, () =>
     {
-        let userCommentReference = 
+        const userCommentReference = 
         {
             username: 'icellusedkars',
             body: 'Fruit pastilles'
@@ -255,7 +255,7 @@ describe('POST /api/articles/:article_id/comments', () =>
     })
     test('responds with error 400 if anything except a number is requested as a parameter', () =>
     {
-        let userCommentReference = 
+        const userCommentReference = 
         {
             username: 'icellusedkars',
             body: 'Fruit pastilles'
@@ -268,7 +268,7 @@ describe('POST /api/articles/:article_id/comments', () =>
     })
     test('responds with error 404 if URL specifies an ID that does not exist', () =>
     {
-        let userCommentReference = 
+        const userCommentReference = 
         {
             username: 'icellusedkars',
             body: 'Fruit pastilles'
@@ -281,7 +281,7 @@ describe('POST /api/articles/:article_id/comments', () =>
     })
     test('if the username that is not matched anywhere, will return an error 404', () =>
     {
-        let userCommentReference = 
+        const userCommentReference = 
         {
             username: 'THIS_USER_DOES_NOT_EXIST',
             body: 'Fruit pastilles'
@@ -294,7 +294,7 @@ describe('POST /api/articles/:article_id/comments', () =>
     })
     test('if the username is matched but the reference body is not matched anywhere, will return an error 404', () =>
     {
-        let userCommentReference = 
+        const userCommentReference = 
         {
             username: 'icellusedkars',
             body: 'THIS BODY DOES NOT EXIST I DID NOT MAKE THIS COMMENT'
