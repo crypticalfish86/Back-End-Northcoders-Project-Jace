@@ -212,7 +212,7 @@ describe('POST /api/articles/:article_id/comments', () =>
                 username: 'icellusedkars',
                 body: 'Fruit pastilles'
             }
-        return request(app).post('/api/articles/1/comments').expect(200).send(userCommentReference)
+        return request(app).post('/api/articles/1/comments').expect(201).send(userCommentReference)
         .then(({ body }) =>
         {
             expect(typeof body).toBe('object')
@@ -227,7 +227,7 @@ describe('POST /api/articles/:article_id/comments', () =>
                 username: 'icellusedkars',
                 body: 'Fruit pastilles'
             }
-        return request(app).post('/api/articles/1/comments').expect(200).send(userCommentReference)
+        return request(app).post('/api/articles/1/comments').expect(201).send(userCommentReference)
         .then(({ body }) =>
         {
             expect(body).toHaveProperty('body')
@@ -245,7 +245,7 @@ describe('POST /api/articles/:article_id/comments', () =>
             username: 'icellusedkars',
             body: 'Fruit pastilles'
         }
-        return request(app).post('/api/articles/1/comments').expect(200).send(userCommentReference)
+        return request(app).post('/api/articles/1/comments').expect(201).send(userCommentReference)
         .then(({ body }) =>
         {
             expect(body.body).toEqual(userCommentReference.body)

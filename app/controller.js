@@ -54,7 +54,7 @@ const getUserComment = (request, response, next) =>
     fetchUserComment(params.article_id, body)
     .then((rows) =>
     {
-        response.status(200).send(rows)
+        response.status(201).send(rows)
     })
     .catch(next)
 }
