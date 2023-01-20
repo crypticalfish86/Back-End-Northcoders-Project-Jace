@@ -120,5 +120,52 @@ const fetchArticleById = (params) =>
 }
 
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments}
+
+const changeArticleVotes = (article_id, body) =>
+{
+    if(!/[0-9]+/g.test(article_id))
+    {
+        return Promise.reject({status: 400, msg: 'invalid article ID: not a number'})
+    }
+    if(!/[0-9]+/g.test(body.inc_votes))
+    {
+        return Promise.reject({status: 400, msg: 'invalid vote input: not a number'})
+    }
+    return db.query
+    (
+        `
+        UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        `
+        ,
+        [body.inc_votes, article_id]
+    )
+    .then(() =>
+    {
+        return db.query
+        (
+            `
+            SELECT *
+            FROM articles
+            WHERE article_id = $1
+            `
+            ,
+            [article_id]
+        )
+    })
+    .then((response) =>
+    {
+        if(response.rowCount !== 0)
+        {
+            return response.rows
+        }
+        else
+        {
+            return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
+        }
+    })
+}
+
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments, changeArticleVotes}
 
