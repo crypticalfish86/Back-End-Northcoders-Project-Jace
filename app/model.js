@@ -1,6 +1,7 @@
 const fs = require('fs/promises')
 const format = require('pg-format')
 const db = require('../db/connection')
+const { response } = require('./app')
 
 const fetchTopics = () =>
 {
@@ -120,5 +121,136 @@ const fetchArticleById = (params) =>
 }
 
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const fetchUsers = () =>
+{
+    return db.query
+    (
+        `
+        SELECT *
+        FROM users
+        `
+    )
+    .then((response) =>
+    {
+        return response.rows
+    })
+}
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments, fetchUsers}
 

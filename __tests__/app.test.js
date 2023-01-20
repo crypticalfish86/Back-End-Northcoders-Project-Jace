@@ -239,3 +239,113 @@ describe('GET: /api/articles/:article_id/comments', () =>
         })
     })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+describe.only('GET /api/users', () =>
+{
+    test(`responds with an array of objects that each have the properties username(string),
+    name(string) and avatar_url(string)`, () =>
+    {
+        return request(app).get('/api/users').expect(200)
+        .then(({ body }) =>
+        {
+            body.forEach((element) =>
+            {
+                expect(element).toEqual
+                (
+                    expect.objectContaining
+                    (
+                        {
+                            username: expect.any(String),
+                            name: expect.any(String),
+                            avatar_url: expect.any(String)
+                        }
+                    )
+                )
+    
+            })
+        })
+    })
+})
