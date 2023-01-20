@@ -67,14 +67,15 @@ describe('GET /api/articles/:article_id', () =>
         return request(app).get('/api/articles/1').expect(200)
         .then(({ body }) =>
         {
-            expect(body).toHaveProperty('author')
-            expect(body).toHaveProperty('title')
-            expect(body).toHaveProperty('article_id')
-            expect(body).toHaveProperty('body')
-            expect(body).toHaveProperty('topic')
-            expect(body).toHaveProperty('created_at')
-            expect(body).toHaveProperty('votes')
-            expect(body).toHaveProperty('article_img_url')
+            expect(body).toHaveProperty('author', expect.any(String))
+            expect(body).toHaveProperty('title', expect.any(String))
+            expect(body).toHaveProperty('article_id', expect.any(Number))
+            expect(body).toHaveProperty('body', expect.any(String))
+            expect(body).toHaveProperty('topic', expect.any(String))
+            expect(body).toHaveProperty('created_at', expect.any(String))
+            expect(body).toHaveProperty('votes', expect.any(Number))
+            expect(body).toHaveProperty('article_img_url', expect.any(String))
+            expect(body).toHaveProperty('comment_count', expect.any(Number))
         })
     })
     test(`response is an object with the object keys: author, title
@@ -92,6 +93,7 @@ describe('GET /api/articles/:article_id', () =>
             expect(body).toHaveProperty('created_at')
             expect(body).toHaveProperty('votes')
             expect(body.article_id).toEqual(1)
+            expect(body.comment_count).toEqual(11)
         })
     })
     test('responds with error 400 if anything except a number is request as a parameter', () =>
