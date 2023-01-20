@@ -96,11 +96,10 @@ const getComments = (request, response, next) =>
 const deleteComment = (request, response, next) =>
 {
     const { params } = request
-    console.log(params)
-    removeComment()
-    .then(() =>
+    removeComment(params.comment_id)
+    .then((rows) =>
     {
-        response.status(204).send()
+        response.status(200).send(rows[0])
     })
     .catch(next)
 }

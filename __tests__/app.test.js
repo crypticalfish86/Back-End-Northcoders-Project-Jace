@@ -408,8 +408,43 @@ describe('GET: /api/articles/:article_id/comments', () =>
 
     describe('DELETE /api/comments/:comment_id', () =>
     {
-        test('the returned body if the delete is successful should be empty', () =>
+        test('the returned body if the delete is successful should return the deleted comment from the database and the comment should no longer exist in database', () =>
         {
-            return request(app).delete('/api/comments/1').expect(204)
+            return request(app).delete('/api/comments/2').expect(200)
+            .then(({ body }) =>
+            {
+                expect(body).toEqual
+                (
+                    {
+                        comment_id: 2,
+                        body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+                        votes: 14,
+                        author: "butter_bridge",
+                        article_id: 1,
+                        created_at: "2020-10-31T03:03:00.000Z",
+                      }
+                )
+                db.query(`SELECT * FROM comments WHERE comment_id = 2`)
+                .then((response) =>
+                {
+                    expect(response.rowCount).toEqual(0)
+                })
+            })
+        })
+        test('returns a status 400 and error if comment_id is anything but a number', () =>
+        {
+            return request(app).delete('/api/comments/test').expect(400)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid comment ID: not a number')
+            })
+        })
+        test('returns a status 400 and error if comment_id is out of range of database', () =>
+        {
+            return request(app).delete('/api/comments/12378649886').expect(400)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid comment ID: ID not found')
+            })
         })
     })
