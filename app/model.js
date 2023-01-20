@@ -97,9 +97,13 @@ const fetchArticleById = (params) =>
         {
             return db.query
             (
-                `SELECT *
+                `SELECT articles.*,
+                COUNT(comments.article_id) ::INT
+                AS comment_count
                 FROM articles
-                WHERE article_id = ${params}`
+                LEFT JOIN comments ON articles.article_id = comments.article_id
+                WHERE articles.article_id = ${params}
+                GROUP BY articles.article_id`
             )
             .then((response) =>
             {
