@@ -13,7 +13,7 @@ const getTopics = (request, response) =>
 
 const getArticles = (request, response, next) =>
 {
-    fetchArticles().then((rows) =>
+    fetchArticles(request.query).then((rows) =>
     {
         response.status(200).send(rows)
     })

@@ -60,8 +60,25 @@ const fetchComments = (params) =>
     }
 }
 
-const fetchArticles = () =>
+const fetchArticles = (query) =>
 {
+    console.log(query)
+    if(!query.hasOwnProperty('topic'))
+    {
+        query.topic = ''
+    }
+    else
+    {
+        query.topic = 'WHERE topic' + ' = ' + '\''+ query.topic + '\''
+    }
+    if(!query.hasOwnProperty('sort_by'))
+    {
+        query.sort_by = 'articles.created_at'
+    }
+    if(!query.hasOwnProperty('order'))
+    {
+        query.order = 'ASC'
+    }
     return db.query
     (
         `
@@ -72,12 +89,16 @@ const fetchArticles = () =>
         FROM articles
         LEFT JOIN comments
         ON articles.article_id = comments.comment_id
+        $1
         GROUP BY articles.article_id
-        ORDER BY articles.created_at ASC
+        ORDER BY $2 $3
         `
-    )
+        ,
+        [query.topic, query.sort_by, query.order]
+    )//i've spent hours on this, for some reason it doesn't work
     .then((response) =>
     {
+        console.log(response.rows)
         if(response.rows.body !== undefined)
         {
             return Promise.reject({status: 401, msg: 'body should not be included'})
