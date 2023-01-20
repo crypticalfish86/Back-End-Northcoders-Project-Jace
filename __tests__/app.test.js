@@ -323,7 +323,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
 
 
 
-describe.only('GET /api/users', () =>
+describe('GET /api/users', () =>
 {
     test(`responds with an array of objects that each have the properties username(string),
     name(string) and avatar_url(string)`, () =>
