@@ -349,7 +349,5 @@ describe('GET /api/users', () =>
     
             })
         })
-    }
-}
-
-
+    })
+})
