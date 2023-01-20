@@ -158,7 +158,7 @@ describe('GET /api/articles', () =>
     })
 })
 
-describe.only('POST /api/articles/:article_id/comments', () =>
+describe('POST /api/articles/:article_id/comments', () =>
 {
     test('takes an object containing a username and a body in the request body and returns an object', () =>
     {
