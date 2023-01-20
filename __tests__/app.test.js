@@ -158,7 +158,7 @@ describe('GET /api/articles', () =>
     })
 })
 
-describe('POST /api/articles/:article_id/comments', () =>
+describe.only('POST /api/articles/:article_id/comments', () =>
 {
     test('takes an object containing a username and a body in the request body and returns an object', () =>
     {
@@ -215,6 +215,23 @@ describe('POST /api/articles/:article_id/comments', () =>
             expect(body.article_id).toEqual(1)
         })
     })
+    test(`ignores extra information on the request body`, () =>
+    {
+        const userCommentReference = 
+        {
+            username: 'icellusedkars',
+            body: 'new comment test',
+            extra_info: 'test'
+        }
+        return request(app).post('/api/articles/1/comments').expect(201).send(userCommentReference)
+        .then(({ body }) =>
+        {
+            expect(body.author).toEqual(userCommentReference.username)
+            expect(body.body).toEqual(userCommentReference.body)
+            expect(body.article_id).toEqual(1)
+            expect(body.extra_info).toEqual(undefined)
+        })
+    })
     test('if article id given is not a number, return status 400 and error message', () =>
     {
         const userCommentReference = 
@@ -239,6 +256,31 @@ describe('POST /api/articles/:article_id/comments', () =>
         .then((err) =>
         {
             expect(err.body.msg).toEqual('invalid article ID: article not found')
+        })
+    })
+    test('if username or body is missing returns status 400 and error message', () =>
+    {
+        const userCommentReference = 
+        {
+            username: 'icellusedkars',
+        }
+        return request(app).post('/api/articles/12098376/comments').expect(400).send(userCommentReference)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('Username or Body missing')
+        })
+    })
+    test('if username is not valid returns status 404 and error message', () =>
+    {
+        const userCommentReference = 
+        {
+            username: 'this_user_does_not_exist',
+            body: 'new comment test'
+        }
+        return request(app).post('/api/articles/12098376/comments').expect(404).send(userCommentReference)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid Username: User not found')
         })
     })
 })

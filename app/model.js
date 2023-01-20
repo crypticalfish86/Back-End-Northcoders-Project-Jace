@@ -125,7 +125,26 @@ const addUserComment = (params, body) =>
     {
         return Promise.reject({status: 400, msg: 'invalid article ID: not a number'})
     }
+    if(body.body === undefined || body.username === undefined)
+    {
+        return Promise.reject({status: 400, msg: 'Username or Body missing'})
+    }
     return db.query
+    (
+        `
+        SELECT *
+        FROM users
+        WHERE username = $1
+        `
+        , [body.username]
+    )
+    .then((response)=>
+    {
+        if(response.rowCount === 0)
+        {
+            return Promise.reject({status: 404, msg: 'invalid Username: User not found'})
+        }
+        return db.query
     (
         `
         SELECT *
@@ -170,6 +189,7 @@ const addUserComment = (params, body) =>
                 )
             })
         }
+    })
     })
 }
 
