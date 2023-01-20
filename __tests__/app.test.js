@@ -245,7 +245,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
 
 
 
-describe.only('PATCH /api/articles/:article_id', () => 
+describe('PATCH /api/articles/:article_id', () => 
 {
     test('responds with a 200 request when a patch is sucessful and responds with an object', () =>
     {
