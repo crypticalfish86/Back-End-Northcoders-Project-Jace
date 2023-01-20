@@ -42,6 +42,41 @@ const getComments = (request, response, next) =>
     .catch(next)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const patchArticleVotes = (request, response, next) =>
 {
     const { params, body } = request
