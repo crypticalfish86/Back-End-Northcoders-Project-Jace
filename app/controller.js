@@ -1,6 +1,7 @@
-const {fetchTopics, fetchArticles, fetchArticleById, fetchComments} = require('./model.js')
+const {fetchTopics, fetchArticles, fetchArticleById, fetchComments, removeComment} = require('./model.js')
 
 const fs = require('fs/promises')
+const { response } = require('./app.js')
 
 const getTopics = (request, response) => 
 {
@@ -43,4 +44,66 @@ const getComments = (request, response, next) =>
 }
 
 
-module.exports = { getTopics, getArticles, getArticleById, getComments }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const deleteComment = (request, response, next) =>
+{
+    const { params } = request
+    console.log(params)
+    removeComment()
+    .then(() =>
+    {
+        response.status(204).send()
+    })
+    .catch(next)
+}
+
+
+module.exports = { getTopics, getArticles, getArticleById, getComments, deleteComment }

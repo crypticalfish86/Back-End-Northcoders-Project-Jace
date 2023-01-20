@@ -361,4 +361,55 @@ describe('GET: /api/articles/:article_id/comments', () =>
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    describe('DELETE /api/comments/:comment_id', () =>
+    {
+        test('the returned body if the delete is successful should be empty', () =>
+        {
+            return request(app).delete('/api/comments/1').expect(204)
+        })
+    })
