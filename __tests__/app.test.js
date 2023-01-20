@@ -111,8 +111,7 @@ describe('GET /api/articles/:article_id', () =>
         })
     })
 })
-//this entire test block is broken and i can't figure out whats wrong
-/*
+
 describe.only('GET /api/articles', () =>
 {
     test('GET Will respond with an array of objects', () =>
@@ -157,13 +156,64 @@ describe.only('GET /api/articles', () =>
         {
             expect(body).toBeSortedBy('created_at', {ascending: true})
         })
-    })//test below doesn't work
-    /*test('GET will respond with an array of objects only with the relevant topic if specified in the query', () =>
+    })
+    test('GET will respond with an array of objects only with the relevant topic if specified in the query', () =>
     {
         return request(app).get('/api/articles?topic=mitch').expect(200)
+        .then(({ body }) =>
+        {
+            body.forEach((element) =>
+            {
+                expect(element.topic).toEqual('mitch')
+            })
+        })
+    })
+    test('GET will respond with an array of objects sorted by comment_count if specified in the query', () =>
+    {
+        return request(app).get('/api/articles?sort_by=comment_count').expect(200)
+        .then(({ body }) =>
+        {
+            expect(body).toBeSortedBy('comment_count', {ascending: true})
+        })
+    })
+    test('GET will respond with an array of objects sorted by comment_count in descending order if specified in the query', () =>
+    {
+        return request(app).get('/api/articles?sort_by=comment_count&order=DESC').expect(200)
+        .then(({ body }) =>
+        {
+            expect(body).toBeSortedBy('comment_count', {descending: true})
+        })
+    })
+    test('final query test to ensure all 3 queries are working together fine', () =>
+    {
+        return request(app).get('/api/articles?topic=mitch&sort_by=comment_count&order=DESC').expect(200)
+        .then(({ body }) =>
+        {
+            body.forEach((element) =>
+            {
+                expect(element.topic).toEqual('mitch')
+            })
+            expect(body).toBeSortedBy('comment_count', {descending: true})
+        })
+    })
+    test('if the sort_by query includes anything not on the whitelist, returns a status 400 and error', () =>
+    {
+        return request(app).get('/api/articles?sort_by=test').expect(400)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('Invalid Sort Term')
+        })
+    })
+    test('if the order query includes anything not on the whitelist, returns a status 400 and error', () =>
+    {
+        return request(app).get('/api/articles?order=test').expect(400)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('Invalid Order Term')
+        })
     })
 })
-*/
+
 
 describe('GET: /api/articles/:article_id/comments', () =>
     {

@@ -13,7 +13,8 @@ const getTopics = (request, response) =>
 
 const getArticles = (request, response, next) =>
 {
-    fetchArticles(request.query).then((rows) =>
+    const { topic, sort_by, order} = request.query
+    fetchArticles(topic, sort_by, order).then((rows) =>
     {
         response.status(200).send(rows)
     })
