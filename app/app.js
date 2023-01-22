@@ -13,6 +13,92 @@ app.get('/api/articles/:article_id', getArticleById)
 
 app.get('/api/articles/:article_id/comments', getComments)
 
+
+
+
+
+module.exports = app;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post('/api/articles/:article_id/comments', postUserComment)
 
 app.use((error, request, response, next) =>
@@ -23,5 +109,3 @@ app.use((error, request, response, next) =>
         response.status(status).send({msg: msg})
     }
 })
-
-module.exports = app;
