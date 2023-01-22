@@ -1,7 +1,8 @@
 const fs = require('fs/promises')
 const format = require('pg-format')
 const db = require('../db/connection')
- 
+const { response } = require('./app')
+
 const fetchTopics = () =>
 {
     return db.query('SELECT * FROM topics')
@@ -96,9 +97,13 @@ const fetchArticleById = (params) =>
         {
             return db.query
             (
-                `SELECT *
+                `SELECT articles.*,
+                COUNT(comments.article_id) ::INT
+                AS comment_count
                 FROM articles
-                WHERE article_id = ${params}`
+                LEFT JOIN comments ON articles.article_id = comments.article_id
+                WHERE articles.article_id = ${params}
+                GROUP BY articles.article_id`
             )
             .then((response) =>
             {
@@ -118,119 +123,6 @@ const fetchArticleById = (params) =>
         return Promise.reject({status: 400, msg: 'invalid article ID: not a number'})
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const addUserComment = (params, body) =>
 {
@@ -306,4 +198,65 @@ const addUserComment = (params, body) =>
     })
 }
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments, addUserComment}
+const changeArticleVotes = (article_id, body) =>
+{
+    if(!/[0-9]+/g.test(article_id))
+    {
+        return Promise.reject({status: 400, msg: 'invalid article ID: not a number'})
+    }
+    if(!/[0-9]+/g.test(body.inc_votes))
+    {
+        return Promise.reject({status: 400, msg: 'invalid vote input: not a number'})
+    }
+    return db.query
+    (
+        `
+        UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        `
+        ,
+        [body.inc_votes, article_id]
+    )
+    .then(() =>
+    {
+        return db.query
+        (
+            `
+            SELECT *
+            FROM articles
+            WHERE article_id = $1
+            `
+            ,
+            [article_id]
+        )
+    })
+    .then((response) =>
+    {
+        if(response.rowCount !== 0)
+        {
+            return response.rows
+        }
+        else
+        {
+            return Promise.reject({status: 404, msg: 'invalid article ID: ID not found'})
+        }
+    })
+}
+
+const fetchUsers = () =>
+{
+    return db.query
+    (
+        `
+        SELECT *
+        FROM users
+        `
+    )
+    .then((response) =>
+    {
+        return response.rows
+    })
+}
+
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers}

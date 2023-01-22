@@ -67,14 +67,15 @@ describe('GET /api/articles/:article_id', () =>
         return request(app).get('/api/articles/1').expect(200)
         .then(({ body }) =>
         {
-            expect(body).toHaveProperty('author')
-            expect(body).toHaveProperty('title')
-            expect(body).toHaveProperty('article_id')
-            expect(body).toHaveProperty('body')
-            expect(body).toHaveProperty('topic')
-            expect(body).toHaveProperty('created_at')
-            expect(body).toHaveProperty('votes')
-            expect(body).toHaveProperty('article_img_url')
+            expect(body).toHaveProperty('author', expect.any(String))
+            expect(body).toHaveProperty('title', expect.any(String))
+            expect(body).toHaveProperty('article_id', expect.any(Number))
+            expect(body).toHaveProperty('body', expect.any(String))
+            expect(body).toHaveProperty('topic', expect.any(String))
+            expect(body).toHaveProperty('created_at', expect.any(String))
+            expect(body).toHaveProperty('votes', expect.any(Number))
+            expect(body).toHaveProperty('article_img_url', expect.any(String))
+            expect(body).toHaveProperty('comment_count', expect.any(Number))
         })
     })
     test(`response is an object with the object keys: author, title
@@ -92,6 +93,7 @@ describe('GET /api/articles/:article_id', () =>
             expect(body).toHaveProperty('created_at')
             expect(body).toHaveProperty('votes')
             expect(body.article_id).toEqual(1)
+            expect(body.comment_count).toEqual(11)
         })
     })
     test('responds with error 400 if anything except a number is requested as a parameter', () =>
@@ -241,294 +243,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
     })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    describe('POST /api/articles/:article_id/comments', () =>
+describe('POST /api/articles/:article_id/comments', () =>
     {
         test('takes an object containing a username and a body in the request body and returns an object', () =>
         {
@@ -654,3 +369,116 @@ describe('GET: /api/articles/:article_id/comments', () =>
             })
         })
     })
+    
+describe('PATCH /api/articles/:article_id', () => 
+{
+    test('responds with a 200 request when a patch is sucessful and responds with an object', () =>
+    {
+        const voteChange = {inc_votes : 2}
+        return request(app).patch('/api/articles/1').expect(200).send(voteChange)
+        .then(({ body }) =>
+        {
+            expect(Array.isArray(body)).toBe(false)
+            expect(typeof body).toBe('object')
+        })
+    })
+    test('responds with an article from the article database (tested by checking the properties)', () =>
+    {
+        const voteChange = {inc_votes : 2}
+        return request(app).patch('/api/articles/1').expect(200).send(voteChange)
+        .then(({ body }) =>
+        {
+            expect(body).toEqual
+            (
+                expect.objectContaining
+                (
+                    {
+                        article_id: expect.any(Number),
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String)
+                    }
+                )
+            )
+        })
+
+    })
+    test('responds with the correct article with the updated votes total and can add votes', () =>
+    {
+        const voteChange = {inc_votes : 2}
+        return request(app).patch('/api/articles/1').expect(200).send(voteChange)
+        .then(({ body }) =>
+        {
+            expect(body.article_id).toEqual(1)
+            expect(body.votes).toEqual(102)
+        })
+    })
+    test('responds with the correct article with the updated votes total and can subtract votes', () =>
+    {
+        const voteChange = {inc_votes : -2}
+        return request(app).patch('/api/articles/1').expect(200).send(voteChange)
+        .then(({ body }) =>
+        {
+            expect(body.article_id).toEqual(1)
+            expect(body.votes).toEqual(98)
+        })
+    })
+    test('responds with an error 400 if article_id is anything except a number', () =>
+    {
+        const voteChange = {inc_votes : 2}
+        return request(app).patch('/api/articles/test').expect(400).send(voteChange)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid article ID: not a number')
+        })
+    })
+    test('responds with an error 400 if the request body is anything but a number', () =>
+    {
+        const voteChange = {inc_votes : 'test'}
+        return request(app).patch('/api/articles/1').expect(400).send(voteChange)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid vote input: not a number')
+        })
+    })
+    test('responds with an error 404 if the article id requested is out of range of the database', () =>
+    {
+        const voteChange = {inc_votes : 2}
+        return request(app).patch('/api/articles/987634').expect(404).send(voteChange)
+        .then((err) =>
+        {
+            expect(err.body.msg).toEqual('invalid article ID: ID not found')
+        })
+    })
+})
+
+describe('GET /api/users', () =>
+{
+    test(`responds with an array of objects that each have the properties username(string),
+    name(string) and avatar_url(string)`, () =>
+    {
+        return request(app).get('/api/users').expect(200)
+        .then(({ body }) =>
+        {
+            body.forEach((element) =>
+            {
+                expect(element).toEqual
+                (
+                    expect.objectContaining
+                    (
+                        {
+                            username: expect.any(String),
+                            name: expect.any(String),
+                            avatar_url: expect.any(String)
+                        }
+                    )
+                )
+    
+            })
+        })
+    })
+})
