@@ -124,6 +124,80 @@ const fetchArticleById = (params) =>
     }
 }
 
+const addUserComment = (params, body) =>
+{
+    if(!/[0-9]+/g.test(params))
+    {
+        return Promise.reject({status: 400, msg: 'invalid article ID: not a number'})
+    }
+    if(body.body === undefined || body.username === undefined)
+    {
+        return Promise.reject({status: 400, msg: 'Username or Body missing'})
+    }
+    return db.query
+    (
+        `
+        SELECT *
+        FROM users
+        WHERE username = $1
+        `
+        , [body.username]
+    )
+    .then((response)=>
+    {
+        if(response.rowCount === 0)
+        {
+            return Promise.reject({status: 404, msg: 'invalid Username: User not found'})
+        }
+        return db.query
+    (
+        `
+        SELECT *
+        FROM articles
+        WHERE article_id = ${params}
+        `
+    )
+    .then((response) =>
+    {
+        
+        if(response.rowCount === 0)
+        {
+            return Promise.reject({status: 404, msg: 'invalid article ID: article not found'})
+        }
+        else
+        {
+            
+            const SQLStringInsert = format
+            (
+                `
+                INSERT INTO comments (body, author, article_id)
+                VALUES %L
+                Returning *;
+                `
+                ,[[body.body, body.username, params]]
+            )
+
+            return db.query(SQLStringInsert)
+            .then(() =>
+            {
+                return db.query
+                (
+                    `
+                    SELECT *
+                    FROM comments
+                    WHERE body = $1
+                    AND author = $2
+                    AND article_id = $3
+                    `
+                    ,
+                    [body.body, body.username, params]
+                )
+            })
+        }
+    })
+    })
+}
+
 const changeArticleVotes = (article_id, body) =>
 {
     if(!/[0-9]+/g.test(article_id))
@@ -185,6 +259,4 @@ const fetchUsers = () =>
     })
 }
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments, changeArticleVotes, fetchUsers}
-
-
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers}

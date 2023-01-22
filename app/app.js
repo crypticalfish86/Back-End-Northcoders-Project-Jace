@@ -1,9 +1,10 @@
 const express = require('express')
 const app = express()
 
-const {getTopics, getArticles, getArticleById, getComments, patchArticleVotes, getUsers} = require('./controller.js')
+const {getTopics, getArticles, getArticleById, getComments, postUserComment, patchArticleVotes, getUsers} = require('./controller.js')
 
 app.use(express.json())
+
 
 
 app.get('/api/topics', getTopics);
@@ -18,6 +19,93 @@ app.patch('/api/articles/:article_id', patchArticleVotes)
 
 app.get('/api/users', getUsers)
 
+
+
+
+module.exports = app;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.post('/api/articles/:article_id/comments', postUserComment)
+
 app.use((error, request, response, next) =>
 {
     if(error.status && error.msg)
@@ -26,5 +114,3 @@ app.use((error, request, response, next) =>
         response.status(status).send({msg: msg})
     }
 })
-
-module.exports = app;
