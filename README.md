@@ -6,9 +6,12 @@ Create two .env files to store the names of the PGDATABASE's.The two databases w
 
 # For those who are visiting this project
 
-The link to the hosted version is here: ADD TO READ_ME
+The link to the hosted version is here: 
+postgres://yxdmyhsz:tb59LCSIqEbQWAF9bTToOqClajbfetsc@rogue.db.elephantsql.com/yxdmyhsz
 
 ADD SEED INSTRUCTIONS
+set up a .env.production file with the correct elephantSQL url set up like so PGDATABASE_URL="elephant_sql_url"
+
 
 This project essentially is the back-end for a website 
 forum that hosts articles posted by approved users. Under 
