@@ -1,5 +1,6 @@
 const fs = require('fs/promises')
 const format = require('pg-format')
+const { query } = require('../db/connection')
 const db = require('../db/connection')
 const { response } = require('./app')
 
@@ -61,21 +62,62 @@ const fetchComments = (params) =>
     }
 }
 
-const fetchArticles = () =>
+const fetchArticles = (topic, sort_by, order) =>
 {
-    return db.query
-    (
-        `
-        SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at,
+    let sortByWhitelist =
+    [
+        'article_id',
+        'title',
+        'author',
+        'created_at',
+        'article_img_url',
+        'comment_count',
+        'votes',
+        undefined
+    ]
+    let orderByWhitelist = ['ASC', 'DESC', undefined]
+    
+    const queryValues = []
+    let queryStr = 
+    `
+    SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at,
         articles.votes, articles.article_img_url,
-        (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id)
+        (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id)::INT
         AS comment_count
         FROM articles
         LEFT JOIN comments
         ON articles.article_id = comments.comment_id
-        GROUP BY articles.article_id
-        ORDER BY articles.created_at ASC
+    `
+    if(topic)
+    {
+        queryValues.push(topic)
+        queryStr += 'WHERE topic = $1'
+    }
+    if(!sort_by)
+    {
+       sort_by = 'created_at' 
+    }
+    if(!order)
+    {
+        order = 'ASC'
+    }
+    if(!sortByWhitelist.includes(sort_by))
+    {
+        return Promise.reject({status: 400, msg: 'Invalid Sort Term'})
+    }
+    if(!orderByWhitelist.includes(order))
+    {
+        return Promise.reject({status: 400, msg: 'Invalid Order Term'})
+    }
+    return db.query
+    (
         `
+        ${queryStr}
+        GROUP BY articles.article_id
+        ORDER BY ${sort_by} ${order}
+        `
+        ,
+        queryValues
     )
     .then((response) =>
     {
