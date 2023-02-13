@@ -99,7 +99,7 @@ const deleteComment = (request, response, next) =>
     removeComment(params.comment_id)
     .then((rows) =>
     {
-        response.status(200).send(rows[0])
+        response.status(204).send(rows[0])
     })
     .catch(next)
 }
