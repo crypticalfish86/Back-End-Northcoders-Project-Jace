@@ -1,11 +1,9 @@
 const express = require('express')
 const app = express()
 const cors=require('cors')
-const {getTopics, getArticles, getArticleById, getComments, postUserComment, patchArticleVotes, getUsers} = require('./controller.js')
+const {getTopics, getArticles, getArticleById, getComments, postUserComment, patchArticleVotes, getUsers, deleteComment} = require('./controller.js')
 app.use(cors())
 app.use(express.json())
-
-
 
 app.get('/api/topics', getTopics);
 
@@ -21,6 +19,7 @@ app.patch('/api/articles/:article_id', patchArticleVotes)
 
 app.get('/api/users', getUsers)
 
+app.delete('/api/comments/:comment_id', deleteComment)
 
 
 app.use((error, request, response, next) =>
@@ -32,85 +31,3 @@ app.use((error, request, response, next) =>
     }
 })
 module.exports = app;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

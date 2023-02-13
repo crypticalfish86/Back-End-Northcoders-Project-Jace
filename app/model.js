@@ -301,4 +301,5 @@ const fetchUsers = () =>
     })
 }
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers}
+
+module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers, removeComment}

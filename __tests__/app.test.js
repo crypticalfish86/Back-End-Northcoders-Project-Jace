@@ -298,7 +298,6 @@ describe('GET: /api/articles/:article_id/comments', () =>
         })
     })
 
-
 describe('POST /api/articles/:article_id/comments', () =>
     {
         test('takes an object containing a username and a body in the request body and returns an object', () =>
@@ -538,3 +537,35 @@ describe('GET /api/users', () =>
         })
     })
 })
+
+    describe('DELETE /api/comments/:comment_id', () =>
+    {
+        test('if the delete is successful, should return a status 204 and the comment should not longer exist in the database', () =>
+        {
+            return request(app).delete('/api/comments/2').expect(204)
+            .then(() =>
+            {
+                db.query(`SELECT * FROM comments WHERE comment_id = 2`)
+                .then((response) =>
+                {
+                    expect(response.rowCount).toEqual(0)
+                })
+            })
+        })
+        test('returns a status 400 and error if comment_id is anything but a number', () =>
+        {
+            return request(app).delete('/api/comments/test').expect(400)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid comment ID: not a number')
+            })
+        })
+        test('returns a status 404 and error if comment_id is out of range of database', () =>
+        {
+            return request(app).delete('/api/comments/12378649886').expect(404)
+            .then((err) =>
+            {
+                expect(err.body.msg).toEqual('invalid comment ID: ID not found')
+            })
+        })
+    })
