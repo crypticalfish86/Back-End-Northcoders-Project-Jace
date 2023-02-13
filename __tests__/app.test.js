@@ -767,7 +767,7 @@ describe('GET: /api/articles/:article_id/comments', () =>
 
 
 
-    describe('DELETE /api/comments/:comment_id', () =>
+    /*describe('DELETE /api/comments/:comment_id', () =>
     {
         test('if the delete is successful, should return a status 204 and the comment should not longer exist in the database', () =>
         {
@@ -797,4 +797,4 @@ describe('GET: /api/articles/:article_id/comments', () =>
                 expect(err.body.msg).toEqual('invalid comment ID: ID not found')
             })
         })
-    })
+    })*/
