@@ -4,6 +4,11 @@ const { query } = require('../db/connection')
 const db = require('../db/connection')
 const { response } = require('./app')
 
+const fetchEndpoints = () =>
+{
+    return fs.readFile('./app/endpoints.json', 'utf-8')
+}
+
 const fetchTopics = () =>
 {
     return db.query('SELECT * FROM topics')
@@ -328,4 +333,4 @@ const removeComment = (comment_id) =>
     })
 }
 
-module.exports = {fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers, removeComment}
+module.exports = {fetchEndpoints, fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers, removeComment}

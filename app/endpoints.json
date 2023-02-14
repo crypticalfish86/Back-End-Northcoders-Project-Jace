@@ -1,0 +1,127 @@
+{
+  "GET /api": {
+    "description": "serves up a json representation of all the available endpoints of the api"
+  },
+  "GET /api/topics": {
+    "description": "serves an array of all topics",
+    "queries": [],
+    "exampleResponse": {
+      "/api/topics": [{ "slug": "football", "description": "Footie!" }]
+    }
+  },
+  "GET /api/articles": {
+    "description": "serves an array of all articles",
+    "queries": ["author", "topic", "sort_by", "order"],
+    "exampleResponse": {
+      "/api/articles": [
+        {
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "created_at": 1527695953341,
+          "votes": 4,
+          "article_img_url": "image url",
+          "comment_count": 7
+        },
+        {
+          "Other_Articles": "etc."
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves a single article by its article_id",
+    "queries": [],
+    "exampleResponse": {
+      "/api/articles/12": [
+        {
+          "article_id": 12,
+          "title": "The battle for Node.js security has only begun",
+          "topic": "coding",
+          "author": "tickle122",
+          "body": "The founder of the Node Security Project says Node.js still has common vulnerabilities, but progress has been made to make it more secure. Appearing at the recent Node Community Convention in San Francisco, project founder Adam Baldwin, chief security officer at Web consulting company &yet, emphasized risks, protections, and progress. Baldwin sees four risks within the Node ecosystem pertinent to the enterprise: the code dependency tree, bugs, malicious actors, and people. I think of [the dependency tree] more as the dependency iceberg, to be honest, Baldwin said, where your code is the ship and your dependencies that you have with your packaged JSON is that little tiny iceberg at the top. But developers need to be aware of the massive iceberg underneath, he stressed.",
+          "created_at": "2020-11-15T13:25:00.000Z",
+          "votes": 0,
+          "article_img_url": "https://images.pexels.com/photos/10845119/pexels-photo-10845119.jpeg?w=700&h=700",
+          "comment_count": 7
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves an array of comments of the relevant single article",  
+    "queries": [],
+    "exampleResponse": {
+      "/api/articles/7/comments": [
+        {
+          "comment_id": 169,
+          "body": 	"Adipisci numquam eum maiores veniam qui praesentium. Veniam atque neque dolores. Voluptates doloremque eos corrupti. Vero minima nesciunt reprehenderit et eius unde a unde iusto. Architecto praesentium eum impedit. Ipsa officia ut ea sint autem nulla.",
+          "article_id": 12,
+          "author": "happyamy2016",
+          "votes": 6,
+          "created_at": "2020-09-19T17:11:00.000Z"
+        },
+        {
+          "Other_Articles": "etc"
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Posts a new comment to the array of comments on that article id",
+    "queries": [],
+    "exampleResponse": {
+      "articles/7/comments": [
+        {
+          "comment_id": 169,
+          "body": 	"Adipisci numquam eum maiores veniam qui praesentium. Veniam atque neque dolores. Voluptates doloremque eos corrupti. Vero minima nesciunt reprehenderit et eius unde a unde iusto. Architecto praesentium eum impedit. Ipsa officia ut ea sint autem nulla.",
+          "article_id": 12,
+          "author": "happyamy2016",
+          "votes": 6,
+          "created_at": "2020-09-19T17:11:00.000Z"
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Adds or removes votes from an article",
+    "queries": [],
+    "exampleResponse": {
+      "/api/articles/12": [
+        {
+          "inc_votes": 2
+        }
+      ]
+    }
+  },
+  "GET /api/users": {
+    "description": "Serves an array of all the users registered on the API",
+    "queries": [],
+    "exampleResponse": {
+      "/api/users": [
+        {
+          "user_id": 0,
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": 	"https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        }
+      ]
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes the comment at that specific comment id",
+    "queries": [],
+    "exampleResponse": {
+      "/api/comments/31": [
+        {
+          "comment_id": 31,
+          "body": "Sit sequi odio suscipit. Iure quisquam qui alias distinctio eos officia enim aut sit. Corrupti ut praesentium ut iste earum itaque qui. Dolores in ab rerum consequuntur. Id ab aliquid autem dolore.",
+          "article_id": 1,
+          "author": "weegembump",
+          "votes": 11,
+          "created_at": "2020-09-26T17:16:00.000Z"
+        }
+      ]
+    }
+  }
+}

@@ -13,6 +13,27 @@ afterAll(() =>
     db.end()
 })
 
+describe('GET /api', () =>
+{
+    test('GET: will return a json file detailing all the endpoints in this api', () =>
+    {
+        return request(app).get('/api').expect(200)
+        .then(({ body }) =>
+        {
+            expect(typeof body).toBe('object')
+            expect(body).toHaveProperty('GET /api', expect.any(Object))
+            expect(body).toHaveProperty('GET /api/topics', expect.any(Object))
+            expect(body).toHaveProperty('GET /api/articles', expect.any(Object))
+            expect(body).toHaveProperty('GET /api/articles/:article_id', expect.any(Object))
+            expect(body).toHaveProperty('GET /api/articles/:article_id/comments', expect.any(Object))
+            expect(body).toHaveProperty('POST /api/articles/:article_id/comments', expect.any(Object))
+            expect(body).toHaveProperty('PATCH /api/articles/:article_id', expect.any(Object))
+            expect(body).toHaveProperty('GET /api/users', expect.any(Object))
+            expect(body).toHaveProperty('DELETE /api/comments/:comment_id', expect.any(Object))
+        })
+    })
+})
+
 describe('GET /api/topics', () => 
 {
     test('GET: will return status 200', () => 

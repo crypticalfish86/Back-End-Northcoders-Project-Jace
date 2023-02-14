@@ -1,7 +1,15 @@
-const {fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers, removeComment} = require('./model.js')
+const {fetchEndpoints, fetchTopics, fetchArticles, fetchArticleById, fetchComments,addUserComment, changeArticleVotes, fetchUsers, removeComment} = require('./model.js')
 
-const fs = require('fs/promises')
 const { response } = require('./app.js')
+
+const getEndpoints = (request,response) =>
+{
+    fetchEndpoints()
+    .then((file) =>
+    {
+        response.status(200).send(JSON.parse(file))
+    })
+}
 
 const getTopics = (request, response) => 
 {
@@ -87,4 +95,4 @@ const deleteComment = (request, response, next) =>
     .catch(next)
 }
 
-module.exports = { getTopics, getArticles, getArticleById, getComments, postUserComment, patchArticleVotes, getUsers, deleteComment }
+module.exports = { getEndpoints, getTopics, getArticles, getArticleById, getComments, postUserComment, patchArticleVotes, getUsers, deleteComment }
