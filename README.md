@@ -1,4 +1,4 @@
-#Hello and Welcome!
+# Hello and Welcome!
 
 This was my first ever major web development project I undertook back in 2022 during my time as a trainee-fullstack developer at Northcoders! It's purpose is to act as a portfolio website and prototype web development project.
 
